@@ -1,0 +1,45 @@
+version: "3.5"
+
+services:
+  node:
+    build: server
+    container_name: weather-server
+    depends_on:
+      - mysqldb
+    ports:
+      - 3001:3001
+    environment:
+      - APP_NAME=Chat
+      - SERVER_ROOT=.
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./server:/usr/src/app
+      - /usr/src/app/node_modules
+
+  react:
+    build: client
+    container_name: weather-client
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    volumes:
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 3000:3000
+      
+  mysqldb:
+      image: mysql:${MYSQL_VERSION}
+      container_name: weather-mysql 
+      restart: always
+      command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+      env_file:
+          - ".env"
+      environment:
+          - MYSQL_DATABASE=${MYSQL_DATABASE}
+          - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+          - MYSQL_USER=${MYSQL_USER}
+          - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      ports:
+          - "3306:3306"
+      volumes:
+          - "./data/db"
