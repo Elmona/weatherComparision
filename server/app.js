@@ -4,9 +4,9 @@ const mysql = require('./config/mysql')
 const app = express()
 const port = 3001
 
-app.get('/', (req, res) => {
-  console.log(mysql)
-  res.send('Hello world!')
+app.get('/test', (req, res) => {
+  console.log('it wööörks')
+  res.send({ text: 'It wööörks' })
 })
 
 app.listen(port, () => console.log(`Server running at port ${port}`))
