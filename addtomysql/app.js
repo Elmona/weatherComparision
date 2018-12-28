@@ -1,8 +1,9 @@
 'use strict'
 
-const csv = require('csv-parser')
+// const csv = require('csv-parser')
 const fs = require('fs')
-const pool = require('./config/mysql')
+const readline = require('readline')
+const connection = require('./config/mysql')
 
 const results = []
 const station = 'Kalmar flygplats'
@@ -17,48 +18,57 @@ const table = `
     INDEX(timestamp, station, temperature)
   ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 `
-// pool.query(table)
-//   .then(result => console.log(result))
-//   .catch(e => console.log(e))
+connection.query(table)
+  .then(result => console.log(result))
+  .catch(e => console.log(e))
 
-fs
-  .createReadStream('../data/data/smhi-opendata_1_66420_20181227_105819.fixed.csv')
-  .pipe(csv({
-    separator: ';',
-    header: true,
-  }))
-  .on('data', data => {
-    results.push(data)
+const lineReader = readline.createInterface({
+  input: fs.createReadStream('../data/data/smhi-opendata_1_66420_20181227_105819.fixed.csv')
+})
+
+lineReader.on('line', line => {
+  let data = line.split(';')
+  results.push(`${data[0]} ${data[1]};${station};${data[2]};${data[3]}\n`)
+  // console.log(`${data[0]} ${data[1]};${station};${data[2]};${data[3]}`)
+})
+
+lineReader.on('close', () => {
+  const stream = fs.createWriteStream('../data/data/temp', {
+    encoding: 'utf-8'
   })
-  .on('end', async () => {
-    let finished = ''
-    console.log('Finished reading data, adding to database')
+  stream.once('open', fd => {
     results.forEach(data => {
-      const result = Object.keys(data)
-      const timestamp = `${result[0]} ${result[1]}`
-      const temp = result[2]
-      const quality = result[3]
-      finished += `${timestamp};${station};${temp};${quality}\n`
+      // let result = Object.keys(data)
+      // console.log(result)
+      // let timestamp = `${result[0]} ${result[1]}`
+      // let temp = result[2]
+      // let quality = result[3]
+      // finished += `${timestamp};${station};${temp};${quality}\n`
+      // console.log(`${timestamp};${station};${temp};${quality}\n`)
+      // stream.write(`${timestamp};${station};${temp};${quality}\n`)
+      stream.write(data)
     })
-
-    fs.writeFile('../data/data/temp', finished, 'utf8', function (err) {
-      if (err) console.log(err)
-      console.log('Finished writing file')
-    })
-
-    const query = `
-      LOAD DATA LOCAL INFILE '/var/lib/mysql/data/temp'
-      INTO TABLE temp
-      FIELDS TERMINATED BY ';'
-      LINES TERMINATED BY '\n'
-      (timestamp, station, temperature, quality);
-    `
-    pool.query(query)
-      .promise()
-      .then(data => {
-        console.log('Done!')
-        console.log(data)
-      })
-      .catch(e => console.log(e))
+    console.log('Done')
+    stream.end()
   })
+})
+
+// fs.writeFile('../data/data/temp', finished, 'utf8', function (err) {
+//   if (err) console.log(err)
+//   console.log('Finished writing file')
+// })
+
+// const query = `
+//       LOAD DATA LOCAL INFILE '/var/lib/mysql/data/temp'
+//       INTO TABLE temp
+//       FIELDS TERMINATED BY ';'
+//       LINES TERMINATED BY '\n'
+//       (timestamp, station, temperature, quality);
+//     `
+// connection.query(query)
+//   .then(data => {
+//     console.log('Done!')
+//     console.log(data)
+//   })
+//   .catch(e => console.log(e))
 
