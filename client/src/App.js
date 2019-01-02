@@ -3,9 +3,20 @@ import './App.css'
 
 import Wrapper from './styles/Wrapper'
 import Container from './styles/Container'
+import Title from './styles/Title'
 
 import 'antd/dist/antd.css'
-import { Progress, Slider, Button, Row, Col } from 'antd'
+import {
+  Progress,
+  Slider,
+  Button,
+  Row,
+  Col,
+  Divider,
+  Select
+} from 'antd'
+
+const Option = Select.Option
 
 class App extends Component {
   constructor(props) {
@@ -17,7 +28,23 @@ class App extends Component {
     return (
       <Container>
         <Wrapper>
-          <h1>Compare weather</h1>
+          <Title>Compare weather</Title>
+          <Row>
+            <Col span={4}>
+              <Select defaultValue="Kalmar">
+                <Option value="Kalmar">Kalmar</Option>
+                <Option value="Skellefte">Skellefte</Option>
+                <Option value="Vaxjo">Vaxjo</Option>
+              </Select>
+            </Col>
+            <Col span={4}>
+              <Select defaultValue="Kalmar">
+                <Option value="Kalmar">Kalmar</Option>
+                <Option value="Skellefte">Skellefte</Option>
+                <Option value="Vaxjo">Vaxjo</Option>
+              </Select>
+            </Col>
+          </Row>
           <Row>
             <Col span={24}>
               <p>Select interval in years</p>
@@ -26,7 +53,7 @@ class App extends Component {
           <Row>
             <Col span={24}>
               <Slider
-                min={1983}
+                min={1962}
                 max={2018}
                 range defaultValue={[1995, 2018]}
               />
@@ -37,6 +64,7 @@ class App extends Component {
               onClick={() => this.getDataFromServer()}
             >View</Button>
           </Row>
+          <Divider />
           <Progress percent={30} />
         </Wrapper>
       </Container>
@@ -46,7 +74,7 @@ class App extends Component {
   getDataFromServer() {
     window.fetch('/test')
       .then(data => data.json())
-      .then(data => console.log(data))
+      .then(data => console.table(data))
   }
 }
 
