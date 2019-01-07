@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
-import './App.css'
+import '../App.css'
 
-import Wrapper from './styles/Wrapper'
-import Container from './styles/Container'
-import Title from './styles/Title'
+import Wrapper from '../styles/Wrapper'
+import Container from '../styles/Container'
+import Title from '../styles/Title'
 
 import 'antd/dist/antd.css'
 import {
@@ -72,7 +72,7 @@ class App extends Component {
   }
 
   getDataFromServer() {
-    window.fetch('/test')
+    window.fetch('/get')
       .then(data => data.json())
       .then(data => console.table(data))
   }
