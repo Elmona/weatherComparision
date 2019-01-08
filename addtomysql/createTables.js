@@ -7,7 +7,6 @@ const createTables = connection => {
       timestamp TIMESTAMP,
       station varchar(20),
       temperature FLOAT,
-      quality VARCHAR(1),
       INDEX(timestamp, station, temperature),
       PRIMARY KEY (timestamp, station)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

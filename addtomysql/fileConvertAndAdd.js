@@ -16,7 +16,7 @@ const fileConvertAndAdd = (data, connection) => {
   lineReader.on('line', line => {
     if (lineNumber > 10) {
       let data = line.split(';')
-      results.push(`${data[0]} ${data[1]};${station};${data[2]};${data[3]}\n`)
+      results.push(`${data[0]} ${data[1]};${station};${data[2]}\n`)
     } else {
       lineNumber++
     }
@@ -39,7 +39,7 @@ const fileConvertAndAdd = (data, connection) => {
           INTO TABLE temperature
           FIELDS TERMINATED BY ';'
           LINES TERMINATED BY '\n'
-          (timestamp, station, temperature, quality);
+          (timestamp, station, temperature);
         `
       connection.query(query)
         .then(data => {
@@ -47,7 +47,7 @@ const fileConvertAndAdd = (data, connection) => {
           console.log('All finished!')
           console.log(data)
 
-          process.exit()
+          // process.exit()
         })
         .catch(e => console.log(e))
     })

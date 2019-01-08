@@ -13,15 +13,29 @@ import {
   Row,
   Col,
   Divider,
-  Select
+  Select,
 } from 'antd'
 
-const Option = Select.Option
+const Option = Select.Option;
 
 class App extends Component {
   constructor(props) {
     super(props)
-    console.log('Not useless')
+
+    this.state = {
+      cities: []
+    }
+  }
+
+  componentDidMount() {
+    window.fetch('/getCities')
+      .then(data => data.json())
+      .then(data => {
+        console.log(data)
+        this.setState({
+          cities: data
+        })
+      })
   }
 
   render() {
@@ -30,21 +44,22 @@ class App extends Component {
         <Wrapper>
           <Title>Compare weather</Title>
           <Row>
-            <Col span={4}>
+            <Col span={6}>
               <Select defaultValue="Kalmar">
-                <Option value="Kalmar">Kalmar</Option>
-                <Option value="Skellefte">Skellefte</Option>
-                <Option value="Vaxjo">Vaxjo</Option>
+                {this.state.cities.map(city =>
+                  <Option key={city.name} value={city.name}>{city.name}</Option>
+                )}
               </Select>
             </Col>
-            <Col span={4}>
-              <Select defaultValue="Kalmar">
-                <Option value="Kalmar">Kalmar</Option>
-                <Option value="Skellefte">Skellefte</Option>
-                <Option value="Vaxjo">Vaxjo</Option>
+            <Col span={6}>
+              <Select defaultValue="Växjö">
+                {this.state.cities.map(city =>
+                  <Option key={city.name} value={city.name}>{city.name}</Option>
+                )}
               </Select>
             </Col>
           </Row>
+
           <Row>
             <Col span={24}>
               <p>Select interval in years</p>
