@@ -8,7 +8,7 @@ import Title from '../styles/Title'
 import 'antd/dist/antd.css'
 import { Button, Row, Col, Select, DatePicker } from 'antd'
 
-import { fetchAvailableCities } from './Requester.js'
+import { fetchAvailableCities, getSummaryForCities } from './Requester.js'
 
 const { RangePicker } = DatePicker
 
@@ -53,7 +53,8 @@ class App extends Component {
   }
 
   render() {
-    const isInformationIsMissing = !this.state.startDate || !this.state.endDate
+    const { cities, startDate, endDate } = this.state
+    const isInformationIsMissing = !startDate || !endDate
     return (
       <Container>
         <Wrapper>
@@ -91,7 +92,10 @@ class App extends Component {
             <Button
               onClick={() => {
                 console.log(this.state)
-                this.getDataFromServer()
+                getSummaryForCities({ cities, startDate, endDate }).fork(
+                  console.error,
+                  console.log
+                )
               }}
               disabled={isInformationIsMissing}
             >
@@ -101,13 +105,6 @@ class App extends Component {
         </Wrapper>
       </Container>
     )
-  }
-
-  getDataFromServer() {
-    window
-      .fetch('/get')
-      .then(data => data.json())
-      .then(data => console.table(data))
   }
 }
 
