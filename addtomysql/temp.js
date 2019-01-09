@@ -16,9 +16,9 @@ console.log(isSummer('1989-12-22')) // false
 /*
 Städer att välja
 ------------------
-Jönköping
-Skövde
+* Jönköping
+* Skövde
 * Kalmar
-Växjö
-Skellefteå
+* Växjö
+* Skellefteå
 */

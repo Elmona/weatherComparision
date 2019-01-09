@@ -1,0 +1,21 @@
+﻿Stationsnamn;Klimatnummer;Mäthöjd (meter över marken)
+Ölandsbron V;66400;2.0
+
+Parameternamn;Beskrivning;Enhet
+Lufttemperatur;momentanvärde, 1 gång/tim;degree celsius
+
+Tidsperiod (fr.o.m);Tidsperiod (t.o.m);Höjd (meter över havet);Latitud (decimalgrader);Longitud (decimalgrader)
+1996-03-01 00:00:00;2019-01-07 18:00:00;0.0;56.66694;16.4609
+
+Datum;Tid (UTC);Lufttemperatur;Kvalitet;;Tidsutsnitt:
+;;;;;Data från senaste fyra månaderna
+;;;;;Tidsperiod (fr.o.m.) = 2018-08-30 00:00:01 (UTC)
+;;;;;Tidsperiod (t.o.m.) = 2019-01-07 18:00:00 (UTC)
+;;;;;Samplingstid = Ej angivet
+;;;;;
+;;;;;Kvalitetskoderna:
+;;;;;Grön (G) = Kontrollerade och godkända värden.
+;;;;;Gul (Y) = Misstänkta eller aggregerade värden. Grovt kontrollerade arkivdata och okontrollerade realtidsdata (senaste 2 tim).
+;;;;;
+;;;;;Orsaker till saknade data:
+;;;;;  stationen eller givaren har varit ur funktion.
