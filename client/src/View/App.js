@@ -80,10 +80,15 @@ class App extends Component {
             <Col span={24}>
               <RangePicker
                 onChange={dates => {
-                  this.setState({
-                    startDate: dates[0].format('YYYY-MM-DD'),
-                    endDate: dates[1].format('YYYY-MM-DD')
-                  })
+                  dates.length === 2
+                    ? this.setState({
+                        startDate: dates[0].format('YYYY-MM-DD'),
+                        endDate: dates[1].format('YYYY-MM-DD')
+                      })
+                    : this.setState({
+                        startDate: null,
+                        endDate: null
+                      })
                 }}
               />
             </Col>
