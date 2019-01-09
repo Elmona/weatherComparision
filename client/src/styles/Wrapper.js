@@ -3,13 +3,14 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
-  background: #FFF; 
+  background: #fff;
   margin: 0 auto;
   margin-top: 20px;
   padding: 20px;
+  text-align: center;
   padding-bottom: 40px;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-  border: 1px solid #CCC;
+  border: 1px solid #ccc;
   width: 80%;
   @media (max-width: 420px) {
     width: 95%;
@@ -21,4 +22,4 @@ const Wrapper = styled.div`
   }
 `
 
-export default Wrapper 
+export default Wrapper
