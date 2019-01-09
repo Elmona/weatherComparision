@@ -6,7 +6,7 @@ import Container from '../styles/Container'
 import Title from '../styles/Title'
 
 import 'antd/dist/antd.css'
-import { Progress, Button, Row, Col, Divider, Select, DatePicker } from 'antd'
+import { Button, Row, Col, Select, DatePicker } from 'antd'
 
 import { fetchAvailableCities } from './Requester.js'
 
@@ -53,6 +53,7 @@ class App extends Component {
   }
 
   render() {
+    const isInformationIsMissing = !this.state.startDate || !this.state.endDate
     return (
       <Container>
         <Wrapper>
@@ -92,6 +93,7 @@ class App extends Component {
                 console.log(this.state)
                 this.getDataFromServer()
               }}
+              disabled={isInformationIsMissing}
             >
               Compare
             </Button>
