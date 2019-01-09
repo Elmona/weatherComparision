@@ -8,31 +8,48 @@ import Title from '../styles/Title'
 import 'antd/dist/antd.css'
 import { Progress, Button, Row, Col, Divider, Select, DatePicker } from 'antd'
 
+import { fetchAvailableCities } from './Requester.js'
+
 const { RangePicker } = DatePicker
 
 const Option = Select.Option
+
+const DEFAULT_CITIES = ['Kalmar', 'Växjö']
 
 class App extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
-      cities: [],
+      availableCities: [],
+      cities: DEFAULT_CITIES,
       startDate: null,
       endDate: null
     }
   }
 
   componentDidMount() {
-    window
-      .fetch('/getCities')
-      .then(data => data.json())
-      .then(data => {
-        console.log(data)
-        this.setState({
-          cities: data
-        })
+    fetchAvailableCities().fork(console.error, availableCities => {
+      this.setState({
+        availableCities
       })
+    })
+  }
+
+  cityToOption(city) {
+    return (
+      <Option key={city.name} value={city.name}>
+        {city.name}
+      </Option>
+    )
+  }
+
+  setCity(index) {
+    return name => {
+      let cities = this.state.cities
+      cities[index] = name
+      this.setState({ cities })
+    }
   }
 
   render() {
@@ -41,32 +58,23 @@ class App extends Component {
         <Wrapper>
           <Title>Compare weather</Title>
           <Row>
-            <Col span={6}>
-              <Select defaultValue="Kalmar">
-                {this.state.cities.map(city => (
-                  <Option key={city.name} value={city.name}>
-                    {city.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-            <Col span={6}>
-              <Select defaultValue="Växjö">
-                {this.state.cities.map(city => (
-                  <Option key={city.name} value={city.name}>
-                    {city.name}
-                  </Option>
-                ))}
-              </Select>
-            </Col>
-          </Row>
+            <Select
+              defaultValue={DEFAULT_CITIES[0]}
+              style={{ margin: '5px' }}
+              onChange={this.setCity(0)}
+            >
+              {this.state.availableCities.map(this.cityToOption)}
+            </Select>
 
-          <Row>
-            <Col span={24}>
-              <p>Select interval in years</p>
-            </Col>
+            <Select
+              defaultValue={DEFAULT_CITIES[1]}
+              style={{ margin: '5px' }}
+              onChange={this.setCity(1)}
+            >
+              {this.state.availableCities.map(this.cityToOption)}
+            </Select>
           </Row>
-          <Row>
+          <Row style={{ marginTop: '15px' }}>
             <Col span={24}>
               <RangePicker
                 onChange={dates => {
@@ -85,11 +93,9 @@ class App extends Component {
                 this.getDataFromServer()
               }}
             >
-              View
+              Compare
             </Button>
           </Row>
-          <Divider />
-          <Progress percent={30} />
         </Wrapper>
       </Container>
     )
