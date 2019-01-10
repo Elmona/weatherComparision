@@ -6,7 +6,7 @@ import Container from '../styles/Container'
 import Title from '../styles/Title'
 
 import 'antd/dist/antd.css'
-import { Button, Row, Col, Select, DatePicker, Form, AutoComplete } from 'antd'
+import { Button, Row, Col, Select, DatePicker, Form } from 'antd'
 
 import { fetchAvailableCities, getSummaryForCities } from './Requester.js'
 import CityPresentation from './CityPresentation'
