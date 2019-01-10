@@ -26,7 +26,8 @@ class App extends Component {
       cities: DEFAULT_CITIES,
       startDate: null,
       endDate: null,
-      isLoading: false
+      isLoading: false,
+      summaries: null
     }
   }
 
@@ -52,6 +53,22 @@ class App extends Component {
       cities[index] = name
       this.setState({ cities })
     }
+  }
+
+  getSummaries() {
+    const summaries = this.state.summaries
+    return !summaries ? (
+      ''
+    ) : (
+      <Row gutter={32} style={{ marginTop: '2em' }}>
+        <Col span={12}>
+          <CityPresentation {...summaries[0]} />
+        </Col>
+        <Col span={12}>
+          <CityPresentation {...summaries[1]} />
+        </Col>
+      </Row>
+    )
   }
 
   render() {
@@ -104,9 +121,9 @@ class App extends Component {
                   this.setState({ isLoading: true })
                   getSummaryForCities({ cities, startDate, endDate }).fork(
                     console.error,
-                    res => {
-                      console.log(res)
-                      this.setState({ isLoading: false })
+                    summaries => {
+                      console.log(summaries)
+                      this.setState({ isLoading: false, summaries })
                     }
                   )
                 }}
@@ -119,31 +136,7 @@ class App extends Component {
               </Button>
             </Form.Item>
           </Form>
-          <Row gutter={32} style={{ marginTop: '2em' }}>
-            <Col span={12}>
-              <CityPresentation
-                city="Kalmar"
-                avgTemp="12"
-                coldestDay="-14"
-                warmestDay="27"
-                avgRain="2.1"
-                rainiestDay="5.2"
-                totalRain="32.7"
-                informationText="Kalmar är centralort i Kalmar kommun, residensstad i Kalmar län samt tidigare stiftsstad i Kalmar stift. Kalmar fick en högskola 1977 och blev universitetsstad 2010. Kalmar är Smålands tredje största tätort efter Jönköping och Växjö. Ölandsbron går från Kalmar."
-              />
-            </Col>
-            <Col span={12}>
-              <CityPresentation
-                city="Växjö"
-                avgTemp="12"
-                coldestDay="-14"
-                warmestDay="27"
-                avgRain="2.1"
-                rainiestDay="5.2"
-                informationText="Växjö är en tätort i södra Smålands inland samt centralort i Växjö kommun, residensstad för Kronobergs län och stiftsstad för Växjö stift. Växjö, som fick stadsrättigheter 1342 och blev universitetsstad 1999, är Sveriges 19:e största tätort med 65 383 invånare (2015)."
-              />
-            </Col>
-          </Row>
+          {this.getSummaries()}
         </Wrapper>
       </Container>
     )
