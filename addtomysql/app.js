@@ -42,12 +42,12 @@ const rainData = [
     station: '150440'
   },
   {
-    filename: './data/rain/smhi-opendata_5_83230_20190109_123735.csv',
+    filename: './data/rain/smhi-opendata_5_83230_20190110_085614.csv',
     city: 'Skövde',
     station: '83230'
   },
   {
-    filename: './data/rain/smhi-opendata_5_83230_20190109_123738.csv',
+    filename: './data/rain/smhi-opendata_5_83230_20190110_085619.csv',
     city: 'Skövde',
     station: '83230'
   },
