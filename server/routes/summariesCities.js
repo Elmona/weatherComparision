@@ -3,33 +3,35 @@ const router = require('express').Router()
 const mysql = require('../config/mysql')
 
 const getTempData = (startDate, endDate, city) =>
-  mysql.execute(`
-SELECT min(temperature) AS coldestDay,
-       avg(temperature) AS avgTemp,
-       max(temperature) AS warmestDay
-FROM temperature
-INNER JOIN tempStation ON tempStation.city='${city}'
-AND tempStation.station = temperature.station
-WHERE temperature.timestamp BETWEEN '${startDate} 00:00:00' AND '${endDate} 00:00:00'
-`)
+  mysql.execute(
+    `
+  SELECT min(temperature) AS coldestDay,
+        avg(temperature) AS avgTemp,
+        max(temperature) AS warmestDay
+  FROM temperature
+  INNER JOIN tempStation ON tempStation.city=?
+  AND tempStation.station = temperature.station
+  WHERE temperature.timestamp BETWEEN ? AND ?
+`,
+    [city, startDate, endDate]
+  )
 
 const getRainData = (startDate, endDate, city) =>
-  mysql.execute(`
-SELECT sum(amount) AS totalRain,
-avg(amount) AS avgRain,
-max(amount) AS rainiestDay
-FROM rainReports
-INNER JOIN rainStation ON rainStation.city='${city}'
-AND rainStation.station = rainReports.station
-WHERE rainReports.timestamp BETWEEN '${startDate}' AND '${endDate}'
-`)
+  mysql.execute(
+    `
+  SELECT sum(amount) AS totalRain,
+        avg(amount) AS avgRain,
+        max(amount) AS rainiestDay
+  FROM rainReports
+  INNER JOIN rainStation ON rainStation.city=?
+  AND rainStation.station = rainReports.station
+  WHERE rainReports.timestamp BETWEEN ? AND ?
+`,
+    [city, startDate, endDate]
+  )
 
 const getCityInformation = city =>
-  mysql.execute(`
-SELECT informationText
-FROM city
-WHERE name='${city}'
-`)
+  mysql.execute(`SELECT informationText FROM city WHERE name=?`, [city])
 
 const getSummary = (startDate, endDate) => city =>
   Promise.all([
@@ -48,7 +50,11 @@ const getSummary = (startDate, endDate) => city =>
 const sendAsJSON = res => d => res.send(JSON.stringify(d))
 
 router.route('/').post(({ body: { cities, startDate, endDate } }, res) => {
-  Promise.all(cities.map(getSummary(startDate, endDate))).then(sendAsJSON(res))
+  Promise.all(cities.map(getSummary(startDate, endDate))).then(
+    sendAsJSON(res).catch(e =>
+      sendAsJSON(res)({ message: 'No search results found' })
+    )
+  )
 })
 
 module.exports = router
