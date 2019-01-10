@@ -50,11 +50,9 @@ const getSummary = (startDate, endDate) => city =>
 const sendAsJSON = res => d => res.send(JSON.stringify(d))
 
 router.route('/').post(({ body: { cities, startDate, endDate } }, res) => {
-  Promise.all(cities.map(getSummary(startDate, endDate))).then(
-    sendAsJSON(res).catch(e =>
-      sendAsJSON(res)({ message: 'No search results found' })
-    )
-  )
+  Promise.all(cities.map(getSummary(startDate, endDate)))
+    .then(sendAsJSON(res))
+    .catch(e => sendAsJSON(res)({ message: 'No search results found' }))
 })
 
 module.exports = router
