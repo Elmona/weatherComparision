@@ -8,6 +8,7 @@ let lineNumber = 0
 
 const fileConvertAndAdd = (data, connection) => {
   const station = data.station
+  const filename = data.filename.replace('./data/temperature/', '')
 
   const lineReader = readline.createInterface({
     input: fs.createReadStream(data.filename)
@@ -23,7 +24,7 @@ const fileConvertAndAdd = (data, connection) => {
   })
 
   lineReader.on('close', () => {
-    const stream = fs.createWriteStream('./temp', {
+    const stream = fs.createWriteStream(`./tempData/temperature/${filename}`, {
       encoding: 'utf-8'
     })
 
@@ -35,7 +36,7 @@ const fileConvertAndAdd = (data, connection) => {
       console.log('Adding to db')
       stream.end()
       const query = `
-          LOAD DATA LOCAL INFILE './temp'
+          LOAD DATA LOCAL INFILE './tempData/temperature/${filename}'
           INTO TABLE temperature
           FIELDS TERMINATED BY ';'
           LINES TERMINATED BY '\n'

@@ -8,6 +8,7 @@ let lineNumber = 0
 
 const fileConvertAndAdd = (data, connection) => {
   const station = data.station
+  const filename = data.filename.replace('./data/rain/', '')
 
   const lineReader = readline.createInterface({
     input: fs.createReadStream(data.filename)
@@ -23,7 +24,7 @@ const fileConvertAndAdd = (data, connection) => {
   })
 
   lineReader.on('close', () => {
-    const stream = fs.createWriteStream('./temp', {
+    const stream = fs.createWriteStream(`./tempData/rain/${filename}`, {
       encoding: 'utf-8'
     })
 
@@ -36,7 +37,7 @@ const fileConvertAndAdd = (data, connection) => {
       console.log('Adding to db')
       stream.end()
       const query = `
-          LOAD DATA LOCAL INFILE './temp'
+          LOAD DATA LOCAL INFILE './tempData/rain/${filename}'
           INTO TABLE rainReports
           FIELDS TERMINATED BY ';'
           LINES TERMINATED BY '\n'
@@ -48,7 +49,6 @@ const fileConvertAndAdd = (data, connection) => {
           console.log('All finished!')
           console.log(data)
 
-          // process.exit()
         })
         .catch(e => console.log(e))
     })

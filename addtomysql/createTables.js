@@ -63,7 +63,7 @@ const createTables = connection => {
       station varchar(20),
       amount FLOAT,
       INDEX(timestamp, station, amount),
-      PRIMARY KEY (timestamp, amount)
+      PRIMARY KEY (timestamp, station)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `
   connection.query(rainReport)
