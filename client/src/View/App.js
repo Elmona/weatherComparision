@@ -10,6 +10,7 @@ import { Button, Row, Col, Select, DatePicker, Form } from 'antd'
 
 import { fetchAvailableCities, getSummaryForCities } from './Requester.js'
 import CityPresentation from './CityPresentation'
+import Footer from './Footer'
 
 const { RangePicker } = DatePicker
 
@@ -137,6 +138,7 @@ class App extends Component {
             </Form.Item>
           </Form>
           {this.getSummaries()}
+          <Footer />
         </Wrapper>
       </Container>
     )
