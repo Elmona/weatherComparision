@@ -12,7 +12,9 @@ const formatDate = timestamp =>
 const CityPresentation = props => (
   <div>
     <h2>{props.city}</h2>
-    <p style={{ textAlign: 'left' }}>{props.informationText}</p>
+    <div style={{ textAlign: 'left', height: '130px', overflowY: 'scroll' }}>
+      <p>{props.informationText}</p>
+    </div>
     <Divider />
     <InfoRow
       label="Average temperature"
