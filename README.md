@@ -84,7 +84,71 @@ CREATE TABLE IF NOT EXISTS rainReports
 ```
 
 ### 4. SQL queries
+All queries will be implemented using prepared statements but for this demos we will use dummy data instead.
+
+#### Get all available cities
+To be able to present the cities to be compared we need to find all cities in the database. Since it is almost impossible to do this in any other way it is hard to motivate the query.
+
+```SQL
+SELECT name FROM city
+```
+
+
+#### Get information about the city
+The application will provide some information about the choosen cities. This query will get that information. Since all information is available in one table a simple WHERE clause is used to find the specific informationText. "Kalmar" will be changed to a prepared statement.
+
+```SQL
+SELECT informationText FROM city WHERE name='Kalmar'
+```
+
+#### Get aggregated rain information
+We join the rain reports and the rain stations where the rain station is in the provided city ("Kalmar" in this example) and where the station is matching the rain report station. Then we select sum of the amount of rain as well as the average amount of rain in the rain reports within and including the provided dates. A similar query will be used for getting the average temperature during the time span.
+
+```SQL
+SELECT Sum(amount) AS totalRain, 
+       Avg(amount) AS avgRain 
+FROM   rainReports 
+       INNER JOIN rainStation 
+               ON rainStation.city = 'Kalmar' 
+                  AND rainStation.station = rainReports.station 
+WHERE  rainReports.timestamp BETWEEN '2018-01-01' AND '2019-01-01' 
+```
+
+#### Get coldest day
+We want to be able to present both the date and the temperature of the coldest day within the time span. To be able to do this we use a similar query as the other one as a base to find the coldest day and then select the temperature and the timestamp. There is no real reason to why `Min(temperature)` is re assigned to `coldestDay` more than to make the query easier to read and understand.
+
+```SQL
+SELECT temperature,
+       timestamp
+FROM   temperature
+WHERE  temperature = (SELECT Min(temperature) AS coldestDay
+                      FROM   temperature
+                              INNER JOIN tempStation
+                                      ON tempStation.city = 'Kalmar'
+                                        AND tempStation.station =
+                                            temperature.station
+                      WHERE  temperature.timestamp BETWEEN '2018-01-01' AND '2019-01-01' )
+    AND temperature.timestamp BETWEEN '2018-01-01' AND '2019-01-01'
+```
+
+#### Get rainiest day
+This query is very similar to the coldest day but uses the rain reports and the rain stations instead. The inner join is used to combine the two tables where the provided arguments matches.
+
+```SQL
+SELECT amount,
+       timestamp
+FROM   rainReports
+WHERE  amount = (SELECT Max(amount) AS rainiestDay
+                  FROM   rainReports
+                          INNER JOIN rainStation
+                                  ON rainStation.city = 'Kalmar'
+                                    AND rainStation.station =
+                                    rainReports.station
+                  WHERE  rainReports.timestamp BETWEEN '2018-01-01' AND '2019-01-01')
+    AND rainReports.timestamp BETWEEN '2018-01-01' AND '2019-01-01'
+```
 
 ### 5. Implementation
+The implementation can be found [here](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
 
 ### 6. Supplemental video
