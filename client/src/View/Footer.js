@@ -6,7 +6,7 @@ const Footer = props => (
   <div>
     <Divider />
     <a href="http://www.smhi.se" style={{ color: 'rgba(0, 0, 0, 0.25)' }}>
-      All data is from SMHI
+      All weather data is from SMHI
     </a>
   </div>
 )
