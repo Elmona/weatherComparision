@@ -18,11 +18,14 @@ The data will be imported from SMHI.
 
 ![ER diagram](https://github.com/Elmona/weatherComparision/blob/master/documents/images/er-diagram-weather.png)
 
-We chose to have a set for the city containing the name of the city as well as some information about it. The weather data is collected by different types of weather stations. We chose to seperate the relation to the stations, one for each type. This is to only have the right type of station in the set when trying to find data. There is no need to go through all rain stations when trying to find the temperature. The actual weather data is also seperated to each other for ther same reason and from the station set to reduce duplication. Instead of letting the city contain all possible stations for the city we chose to let the station know which city it belongs to.
+We chose to have a set for the city containing the name of the city as well as some information about it. The weather data is collected by different types of weather stations. We chose to separate the relation to the stations, one for each type. This is to only have the right type of station in the set when trying to find data. There is no need to go through all rain stations when trying to find the temperature. The actual weather data is also separated to each other for the same reason and from the station set to reduce duplication. Instead of letting the city contain all possible stations for the city we chose to let the station know which city it belongs to.
 
 ### 3. Design in SQL
+
 #### City
-As for now all the information we need for the city is the name and the information text. The name is unique and can be used as a primary key. Since the name is use a lot in the queries we chose to use it as an index as well. 
+
+As for now all the information we need for the city is the name and the information text. The name is unique and can be used as a primary key. Since the name is use a lot in the queries we chose to use it as an index as well.
+
 ```SQL
 CREATE TABLE IF NOT EXISTS city
 (
@@ -34,7 +37,9 @@ CREATE TABLE IF NOT EXISTS city
 ```
 
 #### The Stations
-We chose to convert the relation between the city and the temperature to a table called "tempStation" and the other one "rainStation". It contains all the information mentioned in the E/R diagram. Station is a unique name that SMHI has given the station. We will use this as a primary key. Eventhough they are more or less identical we chose to seperate them since they contains different types of stations. This could have been solved by adding a "type" attribute but it would resolve in unnecessary stations to loop through to find the ones containing the specific type of information when doing queries.
+
+We chose to convert the relation between the city and the temperature to a table called "tempStation" and the other one "rainStation". It contains all the information mentioned in the E/R diagram. Station is a unique name that SMHI has given the station. We will use this as a primary key. Even though they are more or less identical we chose to separate them since they contains different types of stations. This could have been solved by adding a "type" attribute but it would resolve in unnecessary stations to loop through to find the ones containing the specific type of information when doing queries.
+
 ```SQL
 CREATE TABLE IF NOT EXISTS tempStation
 (
@@ -56,6 +61,7 @@ CREATE TABLE IF NOT EXISTS rainStation
 ```
 
 #### Temperature
+
 The temperature for each day and station will be stored in the temperature table. Since the combination of the timestamp and the station is unique we chose to use it as primary key. Since the timestamps contains both date and time we chose to use the type TIMESTAMP since queries using timestamp can be cached.
 
 ```SQL
@@ -70,7 +76,8 @@ CREATE TABLE IF NOT EXISTS temperature
 ```
 
 #### Rain reports
-The rain amount will be stored together with the date and station. In temperature we chose to use TIMESTAMP as type of the timestamp but since it is limited to 1970 and some of the rain reports are older and only has dates we chose to use DATE instead. 
+
+The rain amount will be stored together with the date and station. In temperature we chose to use TIMESTAMP as type of the timestamp but since it is limited to 1970 and some of the rain reports are older and only has dates we chose to use DATE instead.
 
 ```SQL
 CREATE TABLE IF NOT EXISTS rainReports
@@ -84,37 +91,41 @@ CREATE TABLE IF NOT EXISTS rainReports
 ```
 
 ### 4. SQL queries
+
 All queries will be implemented using prepared statements but for this demos we will use dummy data instead.
 
 #### Get all available cities
+
 To be able to present the cities to be compared we need to find all cities in the database. Since it is almost impossible to do this in any other way it is hard to motivate the query.
 
 ```SQL
 SELECT name FROM city
 ```
 
-
 #### Get information about the city
-The application will provide some information about the choosen cities. This query will get that information. Since all information is available in one table a simple WHERE clause is used to find the specific informationText. "Kalmar" will be changed to a prepared statement.
+
+The application will provide some information about the chosen cities. This query will get that information. Since all information is available in one table a simple WHERE clause is used to find the specific informationText. "Kalmar" will be changed to a prepared statement.
 
 ```SQL
 SELECT informationText FROM city WHERE name='Kalmar'
 ```
 
 #### Get aggregated rain information
+
 We join the rain reports and the rain stations where the rain station is in the provided city ("Kalmar" in this example) and where the station is matching the rain report station. Then we select sum of the amount of rain as well as the average amount of rain in the rain reports within and including the provided dates. A similar query will be used for getting the average temperature during the time span.
 
 ```SQL
-SELECT Sum(amount) AS totalRain, 
-       Avg(amount) AS avgRain 
-FROM   rainReports 
-       INNER JOIN rainStation 
-               ON rainStation.city = 'Kalmar' 
-                  AND rainStation.station = rainReports.station 
-WHERE  rainReports.timestamp BETWEEN '2018-01-01' AND '2019-01-01' 
+SELECT Sum(amount) AS totalRain,
+       Avg(amount) AS avgRain
+FROM   rainReports
+       INNER JOIN rainStation
+               ON rainStation.city = 'Kalmar'
+                  AND rainStation.station = rainReports.station
+WHERE  rainReports.timestamp BETWEEN '2018-01-01' AND '2019-01-01'
 ```
 
 #### Get coldest day
+
 We want to be able to present both the date and the temperature of the coldest day within the time span. To be able to do this we use a similar query as the other one as a base to find the coldest day and then select the temperature and the timestamp. There is no real reason to why `Min(temperature)` is re assigned to `coldestDay` more than to make the query easier to read and understand.
 
 ```SQL
@@ -132,6 +143,7 @@ WHERE  temperature = (SELECT Min(temperature) AS coldestDay
 ```
 
 #### Get rainiest day
+
 This query is very similar to the coldest day but uses the rain reports and the rain stations instead. The inner join is used to combine the two tables where the provided arguments matches.
 
 ```SQL
@@ -149,6 +161,7 @@ WHERE  amount = (SELECT Max(amount) AS rainiestDay
 ```
 
 ### 5. Implementation
+
 The implementation can be found [here](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
 
 ### 6. Supplemental video
