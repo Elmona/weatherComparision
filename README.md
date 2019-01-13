@@ -23,7 +23,7 @@ We chose to have a set for the city containing the name of the city as well as s
 ### 3. Design in SQL
 #### City
 As for now all the information we need for the city is the name and the information text. The name is unique and can be used as a primary key. Since the name is use a lot in the queries we chose to use it as an index as well. 
-```
+```SQL
 CREATE TABLE IF NOT EXISTS city
 (
   name varchar(20),
@@ -33,9 +33,9 @@ CREATE TABLE IF NOT EXISTS city
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-#### Stations
+#### The Stations
 We chose to convert the relation between the city and the temperature to a table called "tempStation" and the other one "rainStation". It contains all the information mentioned in the E/R diagram. Station is a unique name that SMHI has given the station. We will use this as a primary key. Eventhough they are more or less identical we chose to seperate them since they contains different types of stations. This could have been solved by adding a "type" attribute but it would resolve in unnecessary stations to loop through to find the ones containing the specific type of information when doing queries.
-```
+```SQL
 CREATE TABLE IF NOT EXISTS tempStation
 (
   city varchar(20),
@@ -45,13 +45,41 @@ CREATE TABLE IF NOT EXISTS tempStation
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
-```
+```SQL
 CREATE TABLE IF NOT EXISTS rainStation
 (
   city varchar(20),
   station varchar(20),
   INDEX(station, city),
   PRIMARY KEY (station)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+#### Temperature
+The temperature for each day and station will be stored in the temperature table. Since the combination of the timestamp and the station is unique we chose to use it as primary key. Since the timestamps contains both date and time we chose to use the type TIMESTAMP since queries using timestamp can be cached.
+
+```SQL
+CREATE TABLE IF NOT EXISTS temperature
+(
+  timestamp TIMESTAMP,
+  station varchar(20),
+  temperature FLOAT,
+  INDEX(timestamp, station, temperature),
+  PRIMARY KEY (timestamp, station)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+#### Rain reports
+The rain amount will be stored together with the date and station. In temperature we chose to use TIMESTAMP as type of the timestamp but since it is limited to 1970 and some of the rain reports are older and only has dates we chose to use DATE instead. 
+
+```SQL
+CREATE TABLE IF NOT EXISTS rainReports
+(
+  timestamp DATE,
+  station varchar(20),
+  amount FLOAT,
+  INDEX(timestamp, station, amount),
+  PRIMARY KEY (timestamp, station)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 ```
 
