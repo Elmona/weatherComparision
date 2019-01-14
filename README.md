@@ -165,3 +165,5 @@ WHERE  amount = (SELECT Max(amount) AS rainiestDay
 The implementation can be found [here](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
 
 ### 6. Supplemental video
+
+[https://youtu.be/S023h3rrxbE](https://youtu.be/S023h3rrxbE)
