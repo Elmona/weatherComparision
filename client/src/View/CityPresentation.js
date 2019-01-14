@@ -7,7 +7,7 @@ import InfoRowDate from './InfoRowDate.js'
 const toOneDecimal = n => (n ? n.toFixed(1) : n)
 
 const formatDate = timestamp =>
-  new Date(timestamp).toISOString().substring(0, 10)
+  !timestamp ? timestamp : new Date(timestamp).toISOString().substring(0, 10)
 
 const CityPresentation = props => (
   <div>
