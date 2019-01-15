@@ -171,21 +171,22 @@ The implementation can be found [here](https://github.com/Elmona/weatherComparis
 * Npm installed
 * Docker installed
 
-
-`git clone https://github.com/Elmona/weatherComparision.git`  
-`cd weatherComparision`  
-`chmod +x createConfigs.sh dockerOnlyMysql.sh`  
-`./createConfigs.sh prod`  
-`./dockerOnlyMysql.sh`  
-Open new terminal  
-`cd weatherComparision/addToMysql`  
-`node app.js` <<- Adding data to database  
-`cd ../server && npm i`
-`npm start` <<- Starting server
-Open new terminal  
-`cd weatherComparision/client`  
-`npm i && npm start` <<- Starting client  
-Open browser at port 3000  
+##### Steps
+Everything in `this style` are scripts that should be executed in your console.
+1. `git clone https://github.com/Elmona/weatherComparision.git`  
+2. `cd weatherComparision`  
+3. `chmod +x createConfigs.sh dockerOnlyMysql.sh`  
+4. `./createConfigs.sh prod`  
+5. `./dockerOnlyMysql.sh`  
+6. Open new terminal  
+7. `cd weatherComparision/addToMysql`  
+8. `node app.js` <<- Adding data to database  
+9. `cd ../server && npm i`
+10. `npm start` <<- Starting server
+11. Open new terminal  
+12. `cd weatherComparision/client`  
+13. `npm i && npm start` <<- Starting client  
+14. Open browser at port 3000  
   
 ### 6. Supplemental video
 
