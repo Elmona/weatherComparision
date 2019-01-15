@@ -18,7 +18,7 @@ The data will be imported from SMHI.
 
 ![ER diagram](https://github.com/Elmona/weatherComparision/blob/master/documents/images/er-diagram-weather.png)
 
-We chose to have a set for the city containing the name of the city as well as some information about it. The weather data is collected by different types of weather stations. We chose to separate the relation to the stations, one for each type. This is to only have the right type of station in the set when trying to find data. There is no need to go through all rain stations when trying to find the temperature. The actual weather data is also separated to each other for the same reason and from the station set to reduce duplication. Instead of letting the city contain all possible stations for the city we chose to let the station know which city it belongs to.
+We chose to have an entity set for the cities with attributes for the name as well as some information about the city. The weather data is collected by different types of weather stations. We chose to separate the relation to the stations, one for each type. This is to only have the right type of station in the entity set when trying to find data. There is no need to go through all rain stations when trying to find the temperature. The actual weather data is also separated for the same reason and from the station sets to reduce duplication and follow the normalisation rules. Instead of letting the city contain all possible stations for the city we chose to let the station know which city it belongs to. This makes it easy to remove all the stations for a city but not removing the city from the database. The same can be said about the weather data and the correlating station.
 
 ### 3. Design in SQL
 
@@ -179,7 +179,9 @@ Everything in `this style` are scripts that should be executed in your console.
 4. `./createConfigs.sh prod`  
 5. `./dockerOnlyMysql.sh`  
 6. Open new terminal  
-7. `cd weatherComparision/addToMysql`  
+7. `cd weatherComparision/addToMysql`
+1. `npm install`
+1. `chmod +x ./createFolders.sh && ./createFolders.sh`
 8. `node app.js` <<- Adding data to database  
 9. `cd ../server && npm i`
 10. `npm start` <<- Starting server
