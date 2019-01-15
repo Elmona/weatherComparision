@@ -164,6 +164,29 @@ WHERE  amount = (SELECT Max(amount) AS rainiestDay
 
 The implementation can be found [here](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
 
+#### Installation instructions
+
+##### Prerequisite
+* Node installed
+* Npm installed
+* Docker installed
+
+
+`git clone https://github.com/Elmona/weatherComparision.git`  
+`cd weatherComparision`  
+`chmod +x createConfigs.sh dockerOnlyMysql.sh`  
+`./createConfigs.sh prod`  
+`./dockerOnlyMysql.sh`  
+Open new terminal  
+`cd weatherComparision/addToMysql`  
+`node app.js` <<- Adding data to database  
+`cd ../server && npm i`
+`npm start` <<- Starting server
+Open new terminal  
+`cd weatherComparision/client`  
+`npm i && npm start` <<- Starting client  
+Open browser at port 3000  
+  
 ### 6. Supplemental video
 
 [https://youtu.be/S023h3rrxbE](https://youtu.be/S023h3rrxbE)
