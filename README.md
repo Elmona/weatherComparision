@@ -8,9 +8,9 @@ By Anton Strand (as224xs) and Emil Larsson (el223nc)
 
 We chose to create a "Compare weather" app. The user is able to compare the weather between two cities during a specified time limit.
 
-This application is directed to people who are either looking for a place to spend their holiday or perhaps even looking for a new city to move to. By be able to compare the weather between two cities the decision to where could be easier to make.
+This application is directed to people who are either looking for a place to spend their holiday or perhaps even looking for a new city to move to. By be able to compare the weather between two cities might make the decision easier to make.
 
-This is just a prototype so the number of cities will be limited. The main functionality will be to be able to compare the average temperature and rain count between two cities during the time span specified by the user.
+This is just a prototype so the number of cities will be limited. The main functionality will be to be able to compare temperatures and rainfall between two cities during the time span specified by the user.
 
 The data will be imported from SMHI.
 
@@ -162,7 +162,7 @@ WHERE  amount = (SELECT Max(amount) AS rainiestDay
 
 ### 5. Implementation
 
-The implementation can be found [here](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
+The implementation can be found at [https://github.com/Elmona/weatherComparision](https://github.com/Elmona/weatherComparision). We used all the queries in the previous section but turned them into prepared statements. We also added queries for average temperature as well as warmest day.
 
 #### Installation instructions
 
